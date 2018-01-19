@@ -1,4 +1,4 @@
-function run_chern(blockIndex,totalBlocks)
+function run_chern(blockIndex,totalBlocks,ysteps)
 tic
 
 xi0 = 15;
@@ -18,7 +18,6 @@ if ychoice == 1
     eps0max = 0.3;
     
     kFa = kFamin + (blockIndex-1)*(kFamax-kFamin)/(totalBlocks-1);  % the value of kFa (the point in the x-axis)
-    ysteps = 300;  % # of steps in the y-axis
     eps0vec = linspace(eps0min,eps0max,ysteps);
     
     if blockIndex == 1
@@ -40,7 +39,6 @@ elseif ychoice == 2
     lammax = 0.05;
     
     kFa = kFamin + (blockIndex-1)*(kFamax-kFamin)/(totalBlocks-1);  % the value of kFa (the point in the x-axis)
-    ysteps = 300;  % # of steps in the y-axis
     lamvec = linspace(lammin,lammax,ysteps);
     
     if blockIndex == 1

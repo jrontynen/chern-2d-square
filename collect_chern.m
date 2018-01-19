@@ -1,15 +1,16 @@
-% clear('totalBlocks','eps0min', 'eps0max', 'lam', 'xi0','Nc','ksteps'); 
-clear('totalBlocks','lammin', 'lammax', 'eps0', 'xi0','Nc','ksteps');
+% Script that collects the Chern number vectors qvec from the folder out 
+% and creates the phase diagram.
 
+ychoice = 1; % choose the y-axis (1 for eps0, 2 for lambda)
+
+clear('totalBlocks','lammin', 'lammax', 'eps0','eps0min', 'eps0max', 'lam', 'xi0','Nc','ksteps');
 load('out/outc1-par')
 
 kFavec = [];
 time = 0;
-% eps0vec = linspace(eps0min,eps0max,ysteps);
-lamvec = linspace(lammin,lammax,ysteps);
 qmat = zeros(ysteps,totalBlocks);
 
-for index = [1:totalBlocks]
+for index = 1:totalBlocks
 
     % read the output from the jobs
     filename = strcat( 'out/outc1-', int2str(index) );
@@ -32,7 +33,7 @@ sprintf('time = %i h %i min',nhrs,nmins)
 
 
 %Select only the Chern numbers within tolerance:
-tol = 0.1;
+tol = 0.5;
 qvec = qmat(:);
 qtol = qvec( abs(qvec-round(qvec)) < tol );
 
@@ -43,8 +44,8 @@ edges = [(bins-0.5) (bins(end)+0.5)];
 counts = histcounts(qtol,edges);
 
 %Select only the Chern numbers with a minimum count:
-mincount = 50;
-I = find(counts>mincount);
+mincount = 1;
+I = find(counts >= mincount);
 bins_mincount = bins(I) % Chern numbers with at least the minimum count
 
 %And make a Gaussian fit:
@@ -118,44 +119,47 @@ for integer = bins_mincount(1):bins_mincount(end)
 end
 
 
-%Plot the phase diagram:
 
-figure
-% imagesc(kFavec/pi,eps0vec,qmat)
-imagesc(kFavec/pi,lamvec,qmat)
-set(gca,'YDir','normal')
-contourcbar;
-% title(sprintf('\\lambda=%0.2f, \\xi=%0.0f, N_c=%0.0f, #k=%i^2, tol=%0.2f, cstep=%0.2f, mincount=%i'...
-%     ,lam,xi0,Nc,ksteps,tol,caxisstep,mincount),'fontweight','normal','fontsize',9)
-title(sprintf('\\epsilon_0=%0.2f, \\xi=%0.0f, N_c=%0.0f, #k=%i^2, tol=%0.2f, cstep=%0.2f, mincount=%i'...
-    ,eps0,xi0,Nc,ksteps,tol,caxisstep,mincount),'fontweight','normal','fontsize',9)
-xlabel('k_Fa/\pi')
-% ylabel('\epsilon_0')
-ylabel('\lambda')
 
-map = map(1:end-Nblank,:);
-caxis([bins_mincount(1) - caxisstep, bins_mincount(end) + caxisstep])
-colormap(map)
+
+
+if ychoice == 1
     
+    eps0vec = linspace(eps0min,eps0max,ysteps);
+    
+    %Plot the phase diagram:
+    figure
+    imagesc(kFavec/pi,eps0vec,qmat)
+    set(gca,'YDir','normal')
+    contourcbar;
+    title(sprintf('\\lambda=%0.2f, \\xi=%0.0f, N_c=%0.0f, #k=%i^2, tol=%0.2f, cstep=%0.2f, mincount=%i'...
+        ,lam,xi0,Nc,ksteps,tol,caxisstep,mincount),'fontweight','normal','fontsize',9)
+    xlabel('k_Fa/\pi')
+    ylabel('\epsilon_0')
+    
+    map = map(1:end-Nblank,:);
+    caxis([bins_mincount(1) - caxisstep, bins_mincount(end) + caxisstep])
+    colormap(map)
+    
+elseif ychoice == 2
+    
+    lamvec = linspace(lammin,lammax,ysteps);
+    
+    %Plot the phase diagram:
+    figure
+    imagesc(kFavec/pi,lamvec,qmat)
+    set(gca,'YDir','normal')
+    contourcbar;
+    title(sprintf('\\epsilon_0=%0.2f, \\xi=%0.0f, N_c=%0.0f, #k=%i^2, tol=%0.2f, cstep=%0.2f, mincount=%i'...
+        ,eps0,xi0,Nc,ksteps,tol,caxisstep,mincount),'fontweight','normal','fontsize',9)
+    xlabel('k_Fa/\pi')
+    ylabel('\lambda')
+    
+    map = map(1:end-Nblank,:);
+    caxis([bins_mincount(1) - caxisstep, bins_mincount(end) + caxisstep])
+    colormap(map)
+    
+end
 
-
-
-
-
-% 
-% figure
-% histogram(qtol,edges)
-% xlim([bins_mincount(1) bins_mincount(end)])
-% hold on
-% h = plot(F);
-% hold off
-% title(sprintf('k_Fa/\\pi=%0.2f...%0.2f, \\lambda=%0.2f, \\xi=%0.0f, N_{1c}=%0.0f'...
-%     ,kFavec(1)/pi,kFavec(end)/pi,lam,xi0,Nc),'fontweight','normal','fontsize',9)
-% % title(sprintf('k_Fa/\\pi=%0.2f...%0.2f, \\epsilon_0=%0.2f, \\xi=%0.0f, N_{1c}=%0.0f'...
-% %     ,kFavec(1)/pi,kFavec(end)/pi,eps0,xi0,Nc),'fontweight','normal','fontsize',9)
-% legend(h,sprintf('%0.0f*e^{-((x-%0.2f)/%0.2f)^2}',coeval))
-% xlabel('q')
-% ylabel('#q')
-% F
 
 

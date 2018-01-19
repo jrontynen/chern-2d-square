@@ -1,4 +1,5 @@
 function q = chern(lam,xi0,kFa,eps0,Nc,ksteps)
+% Returns the Chern number q
 
 del = 1;
 
@@ -27,11 +28,6 @@ Bx = del/2*(I0m(xvec) - I0p(xvec)); % y=0 and x assumed to be positive
 C = del/2*(I0m(rij) - I0p(rij)).*yij.*invr;
 Cy = del/2*(I0m(yvec.') - I0p(yvec.')); % x=0 and y assumed to be positive
 
-% figure
-% surf(xij,yij,Cij)
-% xlabel('xij')
-% ylabel('yij')
-% shading flat
 
 
 % Fourier summation. The matrix product produces a meshgrid of Fourier sums

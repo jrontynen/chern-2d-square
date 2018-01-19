@@ -10,4 +10,4 @@ mkdir $TMPDIR/out
 trap "mv -f $TMPDIR/out/* $WRKDIR/matlab/pr2/out/; exit" TERM EXIT
 
 module load matlab
-matlab -nojvm -r "run_chern($SLURM_ARRAY_TASK_ID,300)"
+matlab -nojvm -r "run_chern($SLURM_ARRAY_TASK_ID,100,100)"
