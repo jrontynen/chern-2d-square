@@ -22,7 +22,7 @@ def natural_keys(text):
 
 res = []
 for fname in os.listdir("./out"):
-	if fname[:5] == 'jobc2':
+	if fname[:5] == 'jobc1':
 		if 'SUCCESS' not in open('./out/' + fname).read():
 			res.append(fname + " no success")
                 #if 'TIME' in open('./out/' + fname).read():
